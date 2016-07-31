@@ -17,11 +17,14 @@ from subprocess import Popen, PIPE
 from emoji import unicode_codes
 
 from pext_base import ModuleBase
+from pext_helpers import Action
 
 
 class Module(ModuleBase):
-    def __init__(self, binary, q):
-        pass
+    def init(self, binary, q):
+        self.q = q
+
+        self.getEntries()
 
     def stop(self):
         pass
@@ -33,12 +36,8 @@ class Module(ModuleBase):
         return []
 
     def getEntries(self):
-        entryList = []
-
         for emoji, code in sorted(unicode_codes.UNICODE_EMOJI.items()):
-            entryList.append([emoji, '{0} {1}'.format(emoji, code)])
-
-        return entryList
+            self.q.put([Action.addEntry, [emoji, '{0} {1}'.format(emoji, code)]])
 
     def getAllEntryFields(self, entryName):
         return ['']
