@@ -3,11 +3,16 @@ This module allows [Pext](https://github.com/Pext/Pext) to be used as an emoji
 keyboard.
 
 # Dependencies
+## General
+https://pypi.python.org/pypi/emoji/
+
 ## Debian
 
     sudo apt-get install python3
 
-Also required: https://pypi.python.org/pypi/emoji/
+## Fedora
+
+    sudo dnf install python3
 
 # License
 GPLv3+.
