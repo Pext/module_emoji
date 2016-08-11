@@ -40,7 +40,7 @@ class Module(ModuleBase):
             self.q.put([Action.addEntry, [emoji, '{0} {1}'.format(emoji, code)]])
 
     def getAllEntryFields(self, entryName):
-        return ['']
+        return []
 
     def runCommand(self, command, printOnSuccess=False, hideErrors=False):
         pass
