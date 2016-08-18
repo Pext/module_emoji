@@ -23,6 +23,8 @@ class Module(ModuleBase):
     def init(self, binary, q):
         self.q = q
 
+        self.entries = {}
+
         self.getEntries()
 
     def stop(self):
@@ -36,10 +38,13 @@ class Module(ModuleBase):
 
     def getEntries(self):
         for emoji, code in sorted(unicode_codes.UNICODE_EMOJI.items()):
-            self.q.put([Action.addEntry, [emoji, '{0} {1}'.format(emoji, code)]])
+            identifier = '{0} {1}'.format(emoji, code)
+            self.entries[identifier] = emoji
+            self.q.put([Action.addEntry, identifier])
 
-    def getAllEntryFields(self, entryName):
-        return []
+    def selectionMade(self, entry):
+        self.q.put([Action.copyToClipboard, self.entries[entry]])
+        self.q.put([Action.close])
 
     def runCommand(self, command, printOnSuccess=False, hideErrors=False):
         pass
