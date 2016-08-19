@@ -20,7 +20,7 @@ from pext_helpers import Action
 
 
 class Module(ModuleBase):
-    def init(self, binary, q):
+    def init(self, settings, q):
         self.q = q
 
         self.entries = {}
