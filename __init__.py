@@ -25,22 +25,16 @@ class Module(ModuleBase):
 
         self.entries = {}
 
-        self.getEntries()
+        self._getEntries()
 
-    def stop(self):
-        pass
-
-    def getSupportedCommands(self):
-        return []
-
-    def getCommands(self):
-        return []
-
-    def getEntries(self):
+    def _getEntries(self):
         for emoji, code in sorted(unicode_codes.UNICODE_EMOJI.items()):
             identifier = '{0} {1}'.format(emoji, code)
             self.entries[identifier] = emoji
             self.q.put([Action.addEntry, identifier])
+
+    def stop(self):
+        pass
 
     def selectionMade(self, entry):
         self.q.put([Action.copyToClipboard, self.entries[entry]])
