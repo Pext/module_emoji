@@ -36,12 +36,10 @@ class Module(ModuleBase):
     def stop(self):
         pass
 
-    def selectionMade(self, entry):
-        self.q.put([Action.copyToClipboard, self.entries[entry]])
-        self.q.put([Action.close])
-
-    def runCommand(self, command, printOnSuccess=False, hideErrors=False):
-        pass
+    def selectionMade(self, selection):
+        if len(selection) == 1:
+            self.q.put([Action.copyToClipboard, self.entries[selection[0]["value"]]])
+            self.q.put([Action.close])
 
     def processResponse(self, response):
         pass
