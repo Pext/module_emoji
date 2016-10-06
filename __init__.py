@@ -25,21 +25,21 @@ class Module(ModuleBase):
 
         self.entries = {}
 
-        self._getEntries()
+        self._get_entries()
 
-    def _getEntries(self):
+    def _get_entries(self):
         for emoji, code in sorted(unicode_codes.UNICODE_EMOJI.items()):
             identifier = '{0} {1}'.format(emoji, code)
             self.entries[identifier] = emoji
-            self.q.put([Action.addEntry, identifier])
+            self.q.put([Action.add_entry, identifier])
 
     def stop(self):
         pass
 
-    def selectionMade(self, selection):
+    def selection_made(self, selection):
         if len(selection) == 1:
-            self.q.put([Action.copyToClipboard, self.entries[selection[0]["value"]]])
+            self.q.put([Action.copy_to_clipboard, self.entries[selection[0]["value"]]])
             self.q.put([Action.close])
 
-    def processResponse(self, response):
+    def process_response(self, response):
         pass
