@@ -37,7 +37,9 @@ class Module(ModuleBase):
         pass
 
     def selection_made(self, selection):
-        if len(selection) == 1:
+        if len(selection) == 0:
+            self.q.put([Action.replace_entry_list, sorted(list(self.entries.keys()))])
+        elif len(selection) == 1:
             self.q.put([Action.copy_to_clipboard, self.entries[selection[0]["value"]]])
             self.q.put([Action.close])
 
