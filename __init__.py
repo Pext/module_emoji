@@ -26,6 +26,7 @@ class Module(ModuleBase):
         self.q = q
 
         self.entries = {}
+        self.display_entries = []
 
         self._get_entries()
 
@@ -33,14 +34,16 @@ class Module(ModuleBase):
         for emoji, code in sorted(unicode_codes.UNICODE_EMOJI.items()):
             identifier = '{0} {1}'.format(emoji, code)
             self.entries[identifier] = emoji
-            self.q.put([Action.add_entry, identifier])
+
+        self.display_entries = sorted(list(self.entries.keys()))
+        self.q.put([Action.replace_entry_list, self.display_entries])
 
     def stop(self):
         pass
 
     def selection_made(self, selection):
         if len(selection) == 0:
-            self.q.put([Action.replace_entry_list, sorted(list(self.entries.keys()))])
+            self.q.put([Action.replace_entry_list, self.display_entries])
         elif len(selection) == 1:
             self.q.put([Action.copy_to_clipboard, self.entries[selection[0]["value"]]])
             self.q.put([Action.close])
