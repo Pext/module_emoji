@@ -18,34 +18,33 @@
 from emoji import unicode_codes
 
 from pext_base import ModuleBase
-from pext_helpers import Action
+from pext_helpers import Action, Entry
 
 
 class Module(ModuleBase):
     def init(self, settings, q):
         self.q = q
 
-        self.entries = {}
-        self.display_entries = []
+        self.entries = []
 
         self._get_entries()
 
     def _get_entries(self):
         for emoji, code in sorted(unicode_codes.UNICODE_EMOJI.items()):
             identifier = '{0} {1}'.format(emoji, code)
-            self.entries[identifier] = emoji
-
-        self.display_entries = sorted(list(self.entries.keys()))
-        self.q.put([Action.replace_entry_list, self.display_entries])
+            entry = Entry(identifier, module_internal=emoji)
+            self.entries.append(entry)
+            self.q.put([Action.add_entry, entry])
 
     def stop(self):
         pass
 
     def selection_made(self, selection):
         if len(selection) == 0:
-            self.q.put([Action.replace_entry_list, self.display_entries])
+            for entry in self.entries:
+                self.q.put([Action.add_entry, entry])
         elif len(selection) == 1:
-            self.q.put([Action.copy_to_clipboard, self.entries[selection[0]["value"]]])
+            self.q.put([Action.copy_to_clipboard, selection[0].module_internal])
             self.q.put([Action.close])
 
     def process_response(self, response):
