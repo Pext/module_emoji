@@ -18,7 +18,7 @@
 from emoji import unicode_codes
 
 from pext_base import ModuleBase
-from pext_helpers import Action, Entry
+from pext_helpers import Action, Entry, EntryType
 
 
 class Module(ModuleBase):
@@ -32,7 +32,7 @@ class Module(ModuleBase):
     def _get_entries(self):
         for emoji, code in sorted(unicode_codes.UNICODE_EMOJI.items()):
             identifier = '{0} {1}'.format(emoji, code)
-            entry = Entry(identifier, module_internal=emoji)
+            entry = Entry(identifier, copyname=emoji, type=EntryType.copyable)
             self.entries.append(entry)
             self.q.put([Action.add_entry, entry])
 
@@ -43,9 +43,6 @@ class Module(ModuleBase):
         if len(selection) == 0:
             for entry in self.entries:
                 self.q.put([Action.add_entry, entry])
-        elif len(selection) == 1:
-            self.q.put([Action.copy_to_clipboard, selection[0].module_internal])
-            self.q.put([Action.close])
 
     def process_response(self, response):
         pass
