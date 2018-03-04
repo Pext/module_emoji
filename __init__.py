@@ -32,7 +32,7 @@ class Module(ModuleBase):
 
     def _get_entries(self):
         for emoji, code in sorted(unicode_codes.UNICODE_EMOJI.items()):
-            identifier = '{0} {1}'.format(emoji, code)
+            identifier = '{0} {1}'.format(emoji, code.strip(':').replace('_', ' ').capitalize())
             self.entries[identifier] = emoji
 
         self.display_entries = sorted(list(self.entries.keys()))
