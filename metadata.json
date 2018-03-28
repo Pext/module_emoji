@@ -1,4 +1,5 @@
 {
+  "id": "pext.emoji",
   "name": "Emoji",
   "developer": "Sylvia van Os (Pext lead developer)",
   "description": "Allows Pext to function as an emoji selector",
