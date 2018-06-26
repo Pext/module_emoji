@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from emoji import unicode_codes
+import os.path
 
 from pext_base import ModuleBase
 from pext_helpers import Action
@@ -31,9 +31,30 @@ class Module(ModuleBase):
         self._get_entries()
 
     def _get_entries(self):
-        for emoji, code in sorted(unicode_codes.UNICODE_EMOJI.items()):
-            identifier = '{0} {1}'.format(emoji, code.strip(':').replace('_', ' ').capitalize())
-            self.entries[identifier] = emoji
+        current_group = ""
+        current_subgroup = ""
+        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'emoji-test.txt')) as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+
+                if line.startswith('# group: '):
+                    current_group = line[len('# group :'):].strip().capitalize()
+                    current_subgroup = ""
+                elif line.startswith('# subgroup: '):
+                    current_subgroup = line[len('# subgroup :'):].replace('-', ' ').strip().capitalize()
+                elif not line.startswith('#'):
+                    try:
+                        if line.split('#')[0].split(';')[1].strip() == 'non-fully-qualified':
+                            continue
+
+                        emoji, code = line.split('#', 1)[1].strip().split(' ', 1)
+                    except IndexError:
+                        continue
+
+                    identifier = '{} {} ({} - {})'.format(emoji, code.strip().capitalize(), current_group, current_subgroup)
+                    self.entries[identifier] = emoji
 
         self.display_entries = sorted(list(self.entries.keys()))
         self.q.put([Action.replace_entry_list, self.display_entries])
