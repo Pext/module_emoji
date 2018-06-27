@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright (C) 2016 - 2017 Sylvia van Os <sylvia@hackerchick.me>
+# Copyright (C) 2016 - 2018 Sylvia van Os <sylvia@hackerchick.me>
 #
 # Pext emoji module is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,6 +16,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os.path
+import string
+
+from xml.etree.ElementTree import parse
 
 from pext_base import ModuleBase
 from pext_helpers import Action
@@ -23,6 +26,7 @@ from pext_helpers import Action
 
 class Module(ModuleBase):
     def init(self, settings, q):
+        self.settings = settings
         self.q = q
 
         self.entries = {}
@@ -31,6 +35,20 @@ class Module(ModuleBase):
         self._get_entries()
 
     def _get_entries(self):
+        self.emoji_translations = {}
+
+        translation_files = ['annotations-{}.xml'.format(self.settings['_locale']),
+                             'annotationsDerived-{}.xml'.format(self.settings['_locale'])]
+
+        for translation_file in translation_files:
+            try:
+                emoji_translation_xml = parse(os.path.join(os.path.dirname(os.path.abspath(__file__)), translation_file)).getroot()[1]
+                for annotation in emoji_translation_xml:
+                    if 'type' in annotation.attrib and annotation.attrib['type'] == 'tts':
+                        self.emoji_translations[annotation.attrib['cp']] = annotation.text
+            except Exception:
+                pass
+
         current_group = ""
         current_subgroup = ""
         with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'emoji-test.txt'), 'r', encoding='utf-8') as f:
@@ -40,20 +58,24 @@ class Module(ModuleBase):
                     continue
 
                 if line.startswith('# group: '):
-                    current_group = line[len('# group :'):].strip().capitalize()
+                    current_group = string.capwords(line[len('# group :'):].strip())
                     current_subgroup = ""
                 elif line.startswith('# subgroup: '):
-                    current_subgroup = line[len('# subgroup :'):].replace('-', ' ').strip().capitalize()
+                    current_subgroup = string.capwords(line[len('# subgroup :'):].replace('-', ' ').strip())
                 elif not line.startswith('#'):
                     try:
                         if line.split('#')[0].split(';')[1].strip() == 'non-fully-qualified':
                             continue
 
                         emoji, code = line.split('#', 1)[1].strip().split(' ', 1)
+                        try:
+                            code = self.emoji_translations[emoji]
+                        except KeyError:
+                            pass
                     except IndexError:
                         continue
 
-                    identifier = '{} {} ({} - {})'.format(emoji, code.strip().capitalize(), current_group, current_subgroup)
+                    identifier = '{} {} ({} - {})'.format(emoji, string.capwords(code.strip()), current_group, current_subgroup)
                     self.entries[identifier] = emoji
 
         self.display_entries = sorted(list(self.entries.keys()))
