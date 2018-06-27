@@ -33,7 +33,7 @@ class Module(ModuleBase):
     def _get_entries(self):
         current_group = ""
         current_subgroup = ""
-        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'emoji-test.txt')) as f:
+        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'emoji-test.txt'), 'r', encoding='utf-8') as f:
             for line in f:
                 line = line.strip()
                 if not line:
