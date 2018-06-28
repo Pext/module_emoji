@@ -31,6 +31,7 @@ class Module(ModuleBase):
 
         self.entries = {}
         self.display_entries = []
+        self.entry_info = {}
 
         self._get_entries()
 
@@ -77,9 +78,11 @@ class Module(ModuleBase):
 
                     identifier = '{} {} ({} - {})'.format(emoji, string.capwords(code.strip()), current_group, current_subgroup)
                     self.entries[identifier] = emoji
+                    self.entry_info[identifier] = "<h1>{}</h1><h2>{}</h2></p><b>Group:</b> {}<br/><b>Subgroup:</b> {}".format(emoji, string.capwords(code.strip()), current_group, current_subgroup)
 
         self.display_entries = sorted(list(self.entries.keys()))
         self.q.put([Action.replace_entry_list, self.display_entries])
+        self.q.put([Action.replace_entry_info_dict, self.entry_info])
 
     def stop(self):
         pass
@@ -87,6 +90,7 @@ class Module(ModuleBase):
     def selection_made(self, selection):
         if len(selection) == 0:
             self.q.put([Action.replace_entry_list, self.display_entries])
+            self.q.put([Action.replace_entry_info_dict, self.entry_info])
         elif len(selection) == 1:
             self.q.put([Action.copy_to_clipboard, self.entries[selection[0]["value"]]])
             self.q.put([Action.close])
