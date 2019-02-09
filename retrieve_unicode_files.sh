@@ -1,6 +1,6 @@
 #!/bin/bash
 # List of emojis
-wget https://unicode.org/Public/emoji/11.0/emoji-test.txt
+wget https://unicode.org/Public/emoji/11.0/emoji-test.txt -O emoji-test.txt
 
 # Spanish translations
 wget https://unicode.org/repos/cldr/trunk/common/annotations/es.xml -O annotations-es_ES.xml
@@ -35,5 +35,5 @@ wget https://unicode.org/repos/cldr/trunk/common/annotations/ru.xml -O annotatio
 wget https://unicode.org/repos/cldr/trunk/common/annotationsDerived/ru.xml -O annotationsDerived-ru_RU.xml
 
 # Traditional Chinese translations
-wget https://unicode.org/repos/cldr/trunk/common/annotations/zh_Hant.xml -O annotations-zh_Hant.xml
-wget https://unicode.org/repos/cldr/trunk/common/annotationsDerived/zh_Hant.xml -O annotationsDerived-zh_Hant.xml
+wget https://unicode.org/repos/cldr/trunk/common/annotations/zh.xml -O annotations-zh_TW.xml
+wget https://unicode.org/repos/cldr/trunk/common/annotationsDerived/zh.xml -O annotationsDerived-zh_TW.xml
