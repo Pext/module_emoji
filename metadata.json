@@ -8,6 +8,8 @@
   "git_urls": [
     "https://github.com/Pext/pext_module_emoji"
   ],
+  "bugtracker": "https://github.com/Pext/pext_module_emoji",
+  "bugtracker_type": "github",
   "platforms": [
     "Linux",
     "Darwin",
