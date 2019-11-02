@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os.path
+import re
 import string
 
 from xml.etree.ElementTree import parse
@@ -32,6 +33,8 @@ class Module(ModuleBase):
         self.entries = {}
         self.display_entries = []
         self.entry_info = {}
+
+        self.emoji_version_regex = re.compile('^E(\d+\.\d+)$')
 
         self._get_entries()
 
@@ -68,7 +71,12 @@ class Module(ModuleBase):
                         if line.split('#')[0].split(';')[1].strip() == 'non-fully-qualified':
                             continue
 
-                        emoji, code = line.split('#', 1)[1].strip().split(' ', 1)
+                        emoji, version, code = line.split('#', 1)[1].strip().split(' ', 2)
+                        try:
+                            version = re.match(self.emoji_version_regex, version).groups()[0]
+                        except IndexError:
+                            version = "Unknown"
+                            code = "{} {}".format(version, code)
                         try:
                             code = self.emoji_translations[emoji]
                         except KeyError:
@@ -78,7 +86,7 @@ class Module(ModuleBase):
 
                     identifier = '{} {} ({} - {})'.format(emoji, string.capwords(code.strip()), current_group, current_subgroup)
                     self.entries[identifier] = emoji
-                    self.entry_info[identifier] = "<h1>{}</h1><h2>{}</h2></p><b>Group:</b> {}<br/><b>Subgroup:</b> {}".format(emoji, string.capwords(code.strip()), current_group, current_subgroup)
+                    self.entry_info[identifier] = "<h1>{}</h1><h2>{}</h2></p><b>Group:</b> {}<br/><b>Subgroup:</b> {}</p><b>Emoji version:</b> {}".format(emoji, string.capwords(code.strip()), current_group, current_subgroup, version)
 
         self.display_entries = sorted(list(self.entries.keys()))
         self.q.put([Action.replace_entry_list, self.display_entries])
