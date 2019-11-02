@@ -2,14 +2,14 @@
 This module allows [Pext](https://github.com/Pext/Pext) to be used as an emoji
 selector.
 
-Current emoji version is 11.0.
+Current emoji version is 13.0.
 
 # License
 GPLv3+.
 
 # Unicode Consortium copyright
 Applies to the following files:
-emoji-test.txt (retrieved from https://unicode.org/Public/emoji/11.0/emoji-test.txt)
+emoji-test.txt (retrieved from https://unicode.org/Public/emoji/13.0/emoji-test.txt)
 annotations-*.xml (retrieved from https://unicode.org/repos/cldr/trunk/common/annotations)
 annotationsDerived-*.xml (retrieved from https://unicode.org/repos/cldr/trunk/common/annotationsDerived)
 
