@@ -8,6 +8,7 @@
   "git_urls": [
     "https://github.com/Pext/pext_module_emoji"
   ],
+  "git_branch_stable": "stable",
   "bugtracker": "https://github.com/Pext/pext_module_emoji",
   "bugtracker_type": "github",
   "platforms": [
