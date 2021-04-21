@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright (C) 2016 - 2018 Sylvia van Os <sylvia@hackerchick.me>
+# Copyright (C) 2016 - 2021 Sylvia van Os <sylvia@hackerchick.me>
 #
 # Pext emoji module is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -68,7 +68,7 @@ class Module(ModuleBase):
                     current_subgroup = string.capwords(line[len('# subgroup :'):].replace('-', ' ').strip())
                 elif not line.startswith('#'):
                     try:
-                        if line.split('#')[0].split(';')[1].strip() == 'non-fully-qualified':
+                        if line.split('#')[0].split(';')[1].strip() != 'fully-qualified':
                             continue
 
                         emoji, version, code = line.split('#', 1)[1].strip().split(' ', 2)
